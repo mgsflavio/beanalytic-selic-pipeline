@@ -80,17 +80,33 @@ def calc_annual_accumulated(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calcula a taxa acumulada anual pelo produto dos fatores diários.
 
-    Fórmula: taxa_acumulada = PRODUTO((1 + taxa_diaria / 100)) - 1
+    Metodologia oficial do Banco Central do Brasil:
+    A API do BCB (série SGS 11) retorna a taxa SELIC Over diária em %/dia.
+    O acumulado anual é calculado pelo produto encadeado dos fatores diários
+    (capitalização composta):
+
+        taxa_acumulada = PRODUTO[(1 + taxa_i/100) para cada dia útil] - 1
+
+    IMPORTANTE: a taxa diária da API já é a taxa efetiva overnight
+    capitalizada. NAO use divisão simples por 252 — isso gera resultados
+    incorretos por ignorar os efeitos da capitalização composta.
+
+    Valores de referência (Fonte: Banco Central do Brasil):
+        2020: ~2.76%  2021: ~4.42%  2022: ~12.39%
+        2023: ~13.04% 2024: ~10.88%
 
     Args:
-        df: DataFrame com dados diários (valor = taxa SELIC diária).
+        df: DataFrame Silver com dados diários.
+            Coluna 'valor' em %/dia conforme API BCB (ex: 0.0420 = 0.0420%/dia).
 
     Returns:
-        DataFrame com colunas [ano, taxa_acumulada_anual].
+        DataFrame com colunas [ano, taxa_acumulada_anual] em decimal
+        (ex: 0.1088 = 10.88%).
     """
     logger.info("Calculando taxa acumulada anual.")
 
     def accumulate(group: pd.DataFrame) -> float:
+        # Produto encadeado dos fatores diários (capitalização composta)
         fatores = 1 + group["valor"] / 100
         return round(fatores.prod() - 1, 6)
 
