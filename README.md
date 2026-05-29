@@ -21,9 +21,9 @@ e valida, e a Gold os agrega em métricas prontas para consumo analítico.
                     https://api.bcb.gov.br (SELIC)
                                  │
                                  ▼
-╔════════════════════════════════════════════════════════════════════╗
-║             Apache Airflow — DAG: selic_pipeline                  ║
-║                                                                    ║
+╔══════════════════════════════════════════════════════════════════╗
+║             Apache Airflow — DAG: selic_pipeline                 ║
+║                                                                  ║
 ║  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐   ║
 ║  │    ◆ BRONZE ◆   │  │    ◆ SILVER ◆   │  │     ◆ GOLD ◆    │   ║
 ║  │                 │  │                 │  │                 │   ║
@@ -33,10 +33,10 @@ e valida, e a Gold os agrega em métricas prontas para consumo analítico.
 ║  │ • Valida schema │  │ • Remove nulos  │  │ • Variação MoM  │   ║
 ║  │ • Salva bruto   │  │ • Valida dados  │  │ • Acumulado ano │   ║
 ║  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘   ║
-║           │                   │                     │            ║
-╚═══════════╪═══════════════════╪═════════════════════╪════════════╝
-            │                   │                     │
-            ▼                   ▼                     ▼
+║           │                    │                    │            ║
+╚═══════════╪════════════════════╪════════════════════╪════════════╝
+            │                    │                    │
+            ▼                    ▼                    ▼
      data/bronze/          data/silver/          data/gold/
      selic_                selic_clean_          selic_metrics_
      YYYYMMDD.parquet      YYYYMMDD.parquet      YYYYMMDD.parquet
@@ -230,10 +230,10 @@ deactivate
 
 O arquivo `data/gold/selic_metrics_YYYYMMDD.csv` contém:
 
-| Coluna               | Tipo  | Descrição                                                                            |
-|----------------------|-------|--------------------------------------------------------------------------------------|
-| ano                  | int   | Ano de referência                                                                    |
-| mes                  | int   | Mês de referência (1 a 12)                                                           |
-| media_mensal         | float | Média da taxa SELIC diária no mês                                                    |
-| variacao_mom_pct     | float | Variação % em relação ao mês anterior                                                |
-| taxa_acumulada_anual | float | Capitalização composta dos fatores diários: (1 + taxa_mensal/100)^(1/dias_úteis) - 1 |
+| Coluna               | Tipo  | Descrição                                                              |
+|----------------------|-------|------------------------------------------------------------------------|
+| ano                  | int   | Ano de referência                                                      |
+| mes                  | int   | Mês de referência (1 a 12)                                             |
+| media_mensal         | float | Média da taxa SELIC diária no mês                                      |
+| variacao_mom_pct     | float | Variação % em relação ao mês anterior                                  |
+| taxa_acumulada_anual | float | Capitalização composta dos fatores diários: ∏(1 + taxa_diaria/100) - 1 |
