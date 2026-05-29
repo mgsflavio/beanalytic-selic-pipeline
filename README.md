@@ -25,7 +25,7 @@ e valida, e a Gold os agrega em métricas prontas para consumo analítico.
 ║             Apache Airflow — DAG: selic_pipeline                 ║
 ║                                                                  ║
 ║  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐   ║
-║  │    ◆ BRONZE ◆   │  │    ◆ SILVER ◆   │  │     ◆ GOLD ◆    │   ║
+║  │   ◆ BRONZE ◆   │  │   ◆ SILVER ◆   │  │    ◆ GOLD ◆    │   ║
 ║  │                 │  │                 │  │                 │   ║
 ║  │   Ingestão      │→ │  Transformação  │→ │    Métricas     │   ║
 ║  │                 │  │                 │  │                 │   ║
