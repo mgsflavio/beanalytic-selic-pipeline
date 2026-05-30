@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 BCB_URL = (
     "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
-    "?formato=json&dataInicial=01/01/2020&dataFinal=31/12/2024"
+    "?formato=json&dataInicial=01/12/2019&dataFinal=31/12/2024"
 )
 BRONZE_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "bronze")
 EXPECTED_SCHEMA = ["data", "valor"]

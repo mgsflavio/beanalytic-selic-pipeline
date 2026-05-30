@@ -31,6 +31,7 @@ import pandas as pd
 # Taxas mensais reais da SELIC Over (% ao mês) — Fonte: BCB
 # ---------------------------------------------------------------------------
 SELIC_OVER_MENSAL = {
+    2019: [None, None, None, None, None, None, None, None, None, None, None, 0.37],  # só dez/2019
     2020: [0.37, 0.29, 0.34, 0.28, 0.24, 0.21, 0.19, 0.16, 0.16, 0.16, 0.15, 0.16],
     2021: [0.15, 0.13, 0.20, 0.21, 0.27, 0.29, 0.34, 0.43, 0.44, 0.48, 0.59, 0.77],
     2022: [0.73, 0.76, 0.93, 0.83, 1.03, 1.02, 1.03, 1.17, 1.07, 1.02, 1.02, 1.12],
@@ -71,6 +72,8 @@ def gerar_dados_referencia(output_path: str) -> pd.DataFrame:
 
     for ano, meses in SELIC_OVER_MENSAL.items():
         for mes_idx, taxa_mensal in enumerate(meses, start=1):
+            if taxa_mensal is None:
+                continue  # pula meses não utilizados (jan-nov/2019)
             du = dias_uteis_mes(ano, mes_idx)
 
             # Taxa diária por capitalização composta
@@ -110,7 +113,7 @@ def validar_acumulados(output_path: str) -> None:
     print("-" * 55)
 
     all_ok = True
-    for ano in sorted(SELIC_OVER_MENSAL.keys()):
+    for ano in sorted(ACUMULADOS_REFERENCIA.keys()):
         grupo = df[df["ano"] == ano]
         acum = (1 + grupo["valor"] / 100).prod() - 1
         calculado_pct = acum * 100

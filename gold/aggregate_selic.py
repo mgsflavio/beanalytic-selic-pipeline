@@ -177,11 +177,16 @@ def run_gold(execution_date: str, **context) -> str:
     # Cálculo das métricas
     monthly_avg = calc_monthly_avg(df_silver)
     monthly_mom = calc_mom_variation(monthly_avg)
-    annual_acc = calc_annual_accumulated(df_silver)
+    annual_acc  = calc_annual_accumulated(df_silver)
 
     # Merge final
     df_gold = monthly_mom.merge(annual_acc, on="ano", how="left")
     df_gold = df_gold[["ano", "mes", "media_mensal", "variacao_mom_pct", "taxa_acumulada_anual"]]
+
+    # Filtra para exibir apenas a partir de 2020 — dez/2019 foi usado
+    # apenas como base para calcular a variação MoM de jan/2020
+    df_gold = df_gold[df_gold["ano"] >= 2020].reset_index(drop=True)
+    logger.info("Registros após filtro (a partir de 2020): %d", len(df_gold))
 
     save_gold(df_gold, output_path)
 
